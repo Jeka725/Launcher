@@ -13,6 +13,9 @@ on:
       - "support_files/**"
       - "platformio.ini"
       - ".github/workflows/build-jeka725-esp32s3-st7735s.yml"
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
