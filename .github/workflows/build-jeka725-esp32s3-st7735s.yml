@@ -1,0 +1,47 @@
+name: Build Jeka725 ESP32-S3 N16R8 ST7735S Launcher
+
+on:
+  push:
+    branches:
+      - main
+      - jeka725-esp32s3-n16r8-st7735s
+    paths:
+      - "boards/jeka725-esp32s3-st7735s/**"
+      - "src/**"
+      - "include/**"
+      - "lib/**"
+      - "support_files/**"
+      - "platformio.ini"
+      - ".github/workflows/build-jeka725-esp32s3-st7735s.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PLATFORMIO_CORE_DIR: ${{ github.workspace }}/.pio/core
+      PIP_DEFAULT_TIMEOUT: "120"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: true
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --retries 5 --timeout 120 requests esptool platformio
+      - name: Build
+        run: platformio run -e jeka725-esp32s3-st7735s
+      - name: Verify firmware artifact
+        run: |
+          test -f Launcher-*.bin
+          ls -lh Launcher-*.bin
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: Launcher-jeka725-esp32s3-st7735s
+          path: Launcher-*.bin
+          if-no-files-found: error
+          retention-days: 5
