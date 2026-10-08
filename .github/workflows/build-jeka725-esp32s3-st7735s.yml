@@ -1,4 +1,5 @@
 name: Build Jeka725 ESP32-S3 N16R8 ST7735S Launcher
+# CI gate: firmware is shared only after the complete workflow is green.
 
 on:
   push:
